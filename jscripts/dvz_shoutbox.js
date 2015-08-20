@@ -213,22 +213,22 @@ var dvz_shoutbox = {
     },
 
     report: function(id) {
-        var reason = prompt('Reden');
+        var reason = prompt('Reason');
         if(reason.trim()) {
             jQuery.post(
                 'xmlhttp.php',
                 {action: 'dvz_sb_report', id: id, key: my_post_key, reason: reason }, function(data){
                     if(data == true) {
-                        alert('We hebben je aangifte ontvangen, bedankt!');
+                        alert('Shout is succesfully reported!');
                     } else {
-                        alert('Er is iets misgegaan, probeer het opnieuw');
+                        alert('Something has gone wrong, try again.');
                     }
                 }
             );
             return;
         }
 
-        alert('Geen geldige reden ingevuld');
+        alert('You entered a invalid reason.');
         return;
     },
 
@@ -331,7 +331,7 @@ var dvz_shoutbox = {
             jQuery(this).children('.user').prepend('<span class="call">&raquo;</span> ');
 
             if (typeof jQuery(this).attr('data-mod') !== 'undefined') {
-                jQuery(this).children('.info').append('<a href="" class="mod edit">E</a><a href="" class="mod del">X</a>');
+                jQuery(this).children('.info').append('<a href="" class="mod edit">EDIT</a><a href="" class="mod del">DEL</a>');
             }
 
         });
