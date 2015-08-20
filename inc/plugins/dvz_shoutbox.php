@@ -109,7 +109,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;');
 
 <div class="thead">
 {$lang->dvz_sb_shoutbox}
-<p class="right"><a href="{$mybb->settings[\'bburl\']}/index.php?action=shoutbox_archive">&laquo; {$lang->dvz_sb_archivelink}</a></p>
+<span style="float:right;"><a href="{$mybb->settings[\'bburl\']}/index.php?action=shoutbox_archive">&laquo; {$lang->dvz_sb_archivelink}</a></span>
 </div>
 
 <div class="body">
@@ -602,7 +602,7 @@ dvz_shoutbox.lang = [\'' . $lang->dvz_sb_delete_confirm . '\', \'' . str_replace
             $attributes .= ' data-own';
         }
 
-        $notes .= '<a href="" class="mod report"><span class="fa fa-exclamation-triangle"></span></a>';
+        $notes .= '<a href="" class="mod report">REPORT</a>';
 
         return '
 <div class="entry" data-id="'.$id.'" data-username="'.$data['username'].'"'.$attributes.'>
