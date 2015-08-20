@@ -289,7 +289,7 @@ function dvz_reports_activate()
 
     $db->insert_query("templates", $insert_array);
 
-    $db->write_query("CREATE TABLE IF NOT EXISTS `".TABLE_PREFIX. "dvz_reports_banned` (
+    $db->write_query("CREATE TABLE IF NOT EXISTS `".TABLE_PREFIX."dvz_reports_banned` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `reason` varchar(150) NOT NULL DEFAULT '',
@@ -337,12 +337,12 @@ function showReports()
     add_breadcrumb($lang->home, "modcp.php");
     add_breadcrumb($lang->shoutbox_reports, "modcp.php?action=shoutbox_reports");
 
-    $reportsQuery = $db->query("SELECT mybb_dvz_reports.id as report_id, mybb_dvz_reports.uid as report_uid, mybb_dvz_reports.reason as report_reason, mybb_dvz_reports.date as report_date,
-	mybb_dvz_shoutbox.id as shout_id, mybb_dvz_shoutbox.uid as author_uid, mybb_dvz_shoutbox.text as shout_text, mybb_dvz_shoutbox.date as shout_date, mybb_dvz_shoutbox.ip as author_ip,
-	mybb_users.username as author_username
-	FROM mybb_dvz_reports
-	JOIN mybb_dvz_shoutbox ON mybb_dvz_reports.shid=mybb_dvz_shoutbox.id
-	JOIN mybb_users ON mybb_users.uid=mybb_dvz_shoutbox.uid ORDER BY mybb_dvz_shoutbox.date DESC;");
+    $reportsQuery = $db->query("SELECT ".TABLE_PREFIX."dvz_reports.id as report_id, ".TABLE_PREFIX."dvz_reports.uid as report_uid, ".TABLE_PREFIX."dvz_reports.reason as report_reason, ".TABLE_PREFIX."dvz_reports.date as report_date,
+	".TABLE_PREFIX."dvz_shoutbox.id as shout_id, ".TABLE_PREFIX."dvz_shoutbox.uid as author_uid, ".TABLE_PREFIX."dvz_shoutbox.text as shout_text, ".TABLE_PREFIX."dvz_shoutbox.date as shout_date, ".TABLE_PREFIX."dvz_shoutbox.ip as author_ip,
+	".TABLE_PREFIX."users.username as author_username
+	FROM ".TABLE_PREFIX."dvz_reports
+	JOIN ".TABLE_PREFIX."dvz_shoutbox ON ".TABLE_PREFIX."dvz_reports.shid=".TABLE_PREFIX."dvz_shoutbox.id
+	JOIN ".TABLE_PREFIX."users ON ".TABLE_PREFIX."users.uid=".TABLE_PREFIX."dvz_shoutbox.uid ORDER BY ".TABLE_PREFIX."dvz_shoutbox.date DESC;");
 
 
     $reportData = '';
@@ -388,7 +388,7 @@ function isBanned($uid) {
     global $db;
 
     $uid = $db->escape_string($uid);
-    $query = $db->simple_select('mybb_dvz_reports_banned', 'uid', "uid='". $uid."'");
+    $query = $db->simple_select(''.TABLE_PREFIX.'dvz_reports_banned', 'uid', "uid='". $uid."'");
     if($query->num_rows === 1) {
         return true;
     }
@@ -473,7 +473,7 @@ function shoutboxBanUser($input) {
         );
 
         //Insert new ban
-        $db->insert_query('mybb_dvz_reports_banned', $data);
+        $db->insert_query('dvz_reports_banned', $data);
         //Log action
         $logdata = array(
             'uid'       =>  $uid,
@@ -533,15 +533,15 @@ function showBanned() {
             $string = trim($mybb->input['querystring']);
             if(!empty($string)) {
                 $string = $db->escape_string($string);
-                $query = $db->query("SELECT " .TABLE_PREFIX. "mybb_dvz_reports_banned.*, " .TABLE_PREFIX."users.username FROM " .TABLE_PREFIX. "mybb_dvz_reports_banned JOIN " .TABLE_PREFIX. "users ON " .TABLE_PREFIX. "mybb_dvz_reports_banned.uid=" .TABLE_PREFIX. "users.uid WHERE mybb_users.username LIKE '%". $string . "%';");
+                $query = $db->query("SELECT " .TABLE_PREFIX. "dvz_reports_banned.*, " .TABLE_PREFIX."users.username FROM " .TABLE_PREFIX. "dvz_reports_banned JOIN " .TABLE_PREFIX. "users ON " .TABLE_PREFIX. "dvz_reports_banned.uid=" .TABLE_PREFIX. "users.uid WHERE users.username LIKE '%". $string . "%';");
             } else {
-                $query = $db->query("SELECT " .TABLE_PREFIX. "mybb_dvz_reports_banned.*, " .TABLE_PREFIX."users.username FROM " .TABLE_PREFIX. "mybb_dvz_reports_banned JOIN " .TABLE_PREFIX. "users ON " .TABLE_PREFIX. "mybb_dvz_reports_banned.uid=" .TABLE_PREFIX. "users.uid;");
+                $query = $db->query("SELECT " .TABLE_PREFIX. "dvz_reports_banned.*, " .TABLE_PREFIX."users.username FROM " .TABLE_PREFIX. "dvz_reports_banned JOIN " .TABLE_PREFIX. "users ON " .TABLE_PREFIX. "dvz_reports_banned.uid=" .TABLE_PREFIX. "users.uid;");
             }
         } else {
-            $query = $db->query("SELECT " .TABLE_PREFIX. "mybb_dvz_reports_banned.*, " .TABLE_PREFIX."users.username FROM " .TABLE_PREFIX. "mybb_dvz_reports_banned JOIN " .TABLE_PREFIX. "users ON " .TABLE_PREFIX. "mybb_dvz_reports_banned.uid=" .TABLE_PREFIX. "users.uid;");
+            $query = $db->query("SELECT " .TABLE_PREFIX. "dvz_reports_banned.*, " .TABLE_PREFIX."users.username FROM " .TABLE_PREFIX. "dvz_reports_banned JOIN " .TABLE_PREFIX. "users ON " .TABLE_PREFIX. "dvz_reports_banned.uid=" .TABLE_PREFIX. "users.uid;");
         }
     } else {
-        $query = $db->query("SELECT " .TABLE_PREFIX. "mybb_dvz_reports_banned.*, " .TABLE_PREFIX."users.username FROM " .TABLE_PREFIX. "mybb_dvz_reports_banned JOIN " .TABLE_PREFIX. "users ON " .TABLE_PREFIX. "mybb_dvz_reports_banned.uid=" .TABLE_PREFIX. "users.uid;");
+        $query = $db->query("SELECT " .TABLE_PREFIX. "dvz_reports_banned.*, " .TABLE_PREFIX."users.username FROM " .TABLE_PREFIX. "dvz_reports_banned JOIN " .TABLE_PREFIX. "users ON " .TABLE_PREFIX. "dvz_reports_banned.uid=" .TABLE_PREFIX. "users.uid;");
     }
 
     if($query->num_rows >= 1) {
@@ -591,7 +591,7 @@ function showPrivate() {
     add_breadcrumb($lang->home, "modcp.php");
     add_breadcrumb($lang->shoutbox_banned, "modcp.php?action=shoutbox_private");
 
-    $query = $db->query("SELECT * FROM mybb_dvz_shoutbox WHERE text LIKE '/pvt %' ORDER BY date DESC");
+    $query = $db->query("SELECT * FROM ".TABLE_PREFIX."dvz_shoutbox WHERE text LIKE '/pvt %' ORDER BY date DESC");
     if($query->num_rows > 0) {
         $privateMessages = '';
         while($data = $query->fetch_array()) {
@@ -621,10 +621,10 @@ function shoutboxUnban() {
 
         $id = $db->escape_string($mybb->input['id']);
 
-        $data = $db->write_query("select mybb_mybb_dvz_reports_banned.uid, mybb_mybb_dvz_reports_banned.id, mybb_users.username
-                from mybb_mybb_dvz_reports_banned
-                JOIN mybb_users ON mybb_mybb_dvz_reports_banned.uid = mybb_users.uid
-                WHERE mybb_mybb_dvz_reports_banned.id = '$id';");
+        $data = $db->write_query("select ".TABLE_PREFIX."dvz_reports_banned.uid, ".TABLE_PREFIX."dvz_reports_banned.id, ".TABLE_PREFIX."users.username
+                from ".TABLE_PREFIX."dvz_reports_banned
+                JOIN ".TABLE_PREFIX."users ON ".TABLE_PREFIX."dvz_reports_banned.uid = ".TABLE_PREFIX."users.uid
+                WHERE ".TABLE_PREFIX."dvz_reports_banned.id = '$id';");
         //Validate ban existance
         if($data->num_rows === 0) {
             redirect('modcp.php?action=shoutbox_banned');
@@ -633,7 +633,7 @@ function shoutboxUnban() {
         $data = $data->fetch_assoc();
 
         //Delete ban and log action
-        $db->delete_query('mybb_dvz_reports_banned', 'id=' . $id);
+        $db->delete_query('dvz_reports_banned', 'id=' . $id);
         //Log action
         $logdata = array(
             'uid'       =>  htmlspecialchars_uni($data['uid']),
