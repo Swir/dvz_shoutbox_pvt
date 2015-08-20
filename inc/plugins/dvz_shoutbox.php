@@ -80,7 +80,7 @@ always=Always check if on display to refresh', 'off', 11, $sgID, 0),
         (NULL, 'dvz_sb_blocked_users', 'Banned users', 'Comma-separated list of user IDs that are banned from posting messages.', 'textarea', '', 20, $sgID, 0)
     ");
 
-    $db->write_query("CREATE TABLE IF NOT EXISTS `mybb_dvz_reports` (
+    $db->write_query("CREATE TABLE IF NOT EXISTS `".TABLE_PREFIX."dvz_reports` (
 `id` int(11) NOT NULL,
   `shid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
@@ -88,9 +88,9 @@ always=Always check if on display to refresh', 'off', 11, $sgID, 0),
   `date` int(11) NOT NULL,
   `ip` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;");
-    $db->write_query('ALTER TABLE `mybb_dvz_reports`
+    $db->write_query('ALTER TABLE `'.TABLE_PREFIX.'dvz_reports`
  ADD PRIMARY KEY (`id`);');
-    $db->write_query('ALTER TABLE `mybb_dvz_reports`
+    $db->write_query('ALTER TABLE `'.TABLE_PREFIX.'dvz_reports`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;');
 
     rebuild_settings();
@@ -602,7 +602,7 @@ dvz_shoutbox.lang = [\'' . $lang->dvz_sb_delete_confirm . '\', \'' . str_replace
             $attributes .= ' data-own';
         }
 
-        $notes .= '<a href="" class="mod report">REPORT</a>';
+        $notes .= '<a href="" class="mod report">AANGEGEVEN</a>';
 
         return '
 <div class="entry" data-id="'.$id.'" data-username="'.$data['username'].'"'.$attributes.'>
@@ -696,12 +696,12 @@ dvz_shoutbox.lang = [\'' . $lang->dvz_sb_delete_confirm . '\', \'' . str_replace
         global $db, $mybb, $lang;
 
         $uid = $mybb->user['uid'];
-        $query = $db->simple_select(TABLE_PREFIX. 'dvz_reports_banned', 'id, reason, unbantime', "uid='" . $uid . "'");
+        $query = $db->simple_select("dvz_reports_banned", 'id, reason, unbantime', "uid='" . $uid . "'");
         if($query->num_rows === 1) {
             $data = $query->fetch_row();
             if($data[2] < strtotime('+1 hour', time())) {
                 $uid = $db->escape_string($data[0]);
-                $db->delete_query(TABLE_PREFIX. 'dvz_reports_banned', "id ='" . $uid . "'");
+                $db->delete_query("dvz_reports_banned", "id ='" . $uid . "'");
                 return false;
             }
 
