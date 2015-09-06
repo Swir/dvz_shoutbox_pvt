@@ -602,7 +602,7 @@ dvz_shoutbox.lang = [\'' . $lang->dvz_sb_delete_confirm . '\', \'' . str_replace
             $attributes .= ' data-own';
         }
 
-        $notes .= '<a href="" class="mod report">AANGEGEVEN</a>';
+        $notes .= '<a href="" class="mod report">REPORT</a>';
 
         return '
 <div class="entry" data-id="'.$id.'" data-username="'.$data['username'].'"'.$attributes.'>
