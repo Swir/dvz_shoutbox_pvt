@@ -569,7 +569,7 @@ dvz_shoutbox.lang = [\'' . $lang->dvz_sb_delete_confirm . '\', \'' . str_replace
             $text = $usernameString . str_replace($replace, "",$text);
         }
 
-        $avatar = '<a href="/member.php?action=profile&' . $data['uid'] . '"><img src="' . (empty($data['avatar']) ? 'images/default_avatar.png' : $data['avatar']) . '" alt="avatar" /></a>';
+        $avatar = '<a href="/member.php?action=profile&uid=' . $data['uid'] . '"><img src="' . (empty($data['avatar']) ? 'images/default_avatar.png' : $data['avatar']) . '" alt="avatar" /></a>';
         $user   = '<span class="username" data-id="'. (int)$data['uid'] .'"><a>' . format_name($data['username'], $data['usergroup'], $data['displaygroup']) . '</a></span>';
 
 
